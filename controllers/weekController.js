@@ -18,6 +18,7 @@ module.exports = {
                 .send('Error: couldn\'t get list of all weeks');
         }
     },
+<<<<<<< HEAD
     weekGetController: (request, response) => {
         const weekId = request.params.id;
 
@@ -64,4 +65,6 @@ module.exports = {
     weekEditController: (request, response) => {
 
     }
+=======
+>>>>>>> parent of fbf6a81... Get a single week by id controller
 };
