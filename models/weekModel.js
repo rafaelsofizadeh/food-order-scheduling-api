@@ -6,18 +6,10 @@ const weekSchema = mongoose.Schema({
     start: {
         type: Date,
         required: true,
-        validate: {
-            validator: (date) => date.getFormatDay() === 0,
-            message: 'start date must be monday'
-        }
     },
     open: {
         type: Date,
         required: true,
-        validate: {
-            validator: (date) => date < this.close,
-            message: 'open date needs to be earlier than close date'
-        }
     },
     close: {
         type: Date,
