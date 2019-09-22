@@ -28,4 +28,22 @@ const weekSchema = mongoose.Schema({
         ref: 'Day'
     }]
 });
+
+//Initiate automatically on week creation
+weekSchema.pre('save', function () {
+    if (this.isNew) {
+        this.initiate();
+    }
+    //TODO: set cronjobs
+});
+
+//Add a 6 day schedule
+weekSchema.methods.initiate = function () {
+    const startDate = this.start;
+
+    for (let days = 0; days < 6; days++) {
+        this.days.push({ date: Date.addDays(startDate, days) });
+    }
+};
+
 module.exports = module.model('Week', weekSchema);
