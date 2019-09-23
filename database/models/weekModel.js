@@ -33,6 +33,13 @@ const weekSchema = mongoose.Schema({
     days: [daySchema]
 });
 
+//Initiate automatically on week creation
+weekSchema.pre('save', function () {
+    if (this.isNew) {
+        this.initiate();
+        this.scheduleStatusJobs();
+    }
+});
 
 //Add a 6 day schedule
 weekSchema.methods.initiate = function () {
@@ -43,5 +50,12 @@ weekSchema.methods.initiate = function () {
     }
 };
 
+weekSchema.methods.scheduleStatusJobs = function () {
+    const openDate = this.open;
+    const closeDate = this.close;
+
+    agenda.schedule(openDate, 'set week status', { weekId: this._id, status: 'open' });
+    agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'closed' });
+};
 
 module.exports = module.model('Week', weekSchema);
