@@ -50,14 +50,36 @@ module.exports = {
             ...body
         });
 
-        const validationError = await week.validate();
-        if (validationError) {
-            response
-                .status(400)
-                .json({
-                    message: 'Error: couldn\'t create a new week entry due to validation error',
-                    validationError
-                });
+        try {
+            const validationError = await week.validate();
+
+            if (validationError) {
+
+                return response
+                    .status(400) //General error
+                    .json({
+                        message: 'Error: couldn\'t create a new week entry due to validation error',
+                        validationError
+                    });
+
+            } else {
+
+                //Triggers weekSchema's pre('save') hooks 
+                const weekSaveResult = await week.save();
+                return response
+                    .status(201) //Created
+                    .json({
+                        message: 'Success: week entry successfully created',
+                        week: weekSaveResult
+                    });
+
+            }
+        } catch (error) {
+            return response
+                .status(500) //Server error
+                .send('Error: couldn\'t validate the week creation');
+        }
+    },
         } else {
             //Triggers weekSchema's pre('save') hooks 
             const weekSaveResult = await week.save();
