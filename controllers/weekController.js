@@ -47,9 +47,7 @@ module.exports = {
             _id: mongoose.Types.ObjectId(),
             start: new Date(body.start),
             open: new Date(body.open),
-            close: new Date(body.close),
-            status: body.status,
-            days: body.days
+            close: new Date(body.close)
         });
 
         try {
@@ -57,6 +55,7 @@ module.exports = {
 
             if (validationError) {
 
+                console.log(validationError);
                 return response
                     .status(400) //General error
                     .json({
@@ -68,6 +67,7 @@ module.exports = {
 
                 //Triggers weekSchema's pre('save') hooks 
                 const weekSaveResult = await week.save();
+                console.log(weekSaveResult);
                 return response
                     .status(201) //Created
                     .json({
@@ -77,6 +77,7 @@ module.exports = {
 
             }
         } catch (error) {
+            console.log(error);
             return response
                 .status(500) //Server error
                 .send('Error: couldn\'t validate the week creation');
