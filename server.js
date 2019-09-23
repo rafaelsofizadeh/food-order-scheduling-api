@@ -1,16 +1,23 @@
 require('./utils/misc/extendDatePrototype');
+
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const express = require('express');
+const mongoose = require('mongoose');
 const expressWinston = require('express-winston');
 const compression = require('compression');
 
-const config = require('./config.json');
-const port = config['server']['port'];
-const loggerOptions = require('./utils/logger/loggerOptions.js');
 const Logger = require('./utils/logger/logger.js');
 const logger = new Logger();
+const loggerOptions = require('./utils/logger/loggerOptions.js');
+
+const config = require('./config.json');
+const port = config['connection']['port'];
+const connectionString = config['connection']['mongodb']['connection_string'];
+const connectionOptions = config['connection']['mongodb']['options'];
+
+mongoose.connect(connectionString, connectionOptions);
 
 const api = express();
 
@@ -29,10 +36,17 @@ api.listen(port, (error) => {
 
     require('./utils/database');
 
-    fs.readdir(path.join(__dirname, 'routes')).map((file) => {
-        require(`./routes/${file}`)(api);
-    });
-    logger.info(`API is now running on port ${port}`);
+    try {
+
+        fs.readdirSync(path.join(__dirname, 'routes')).map((file) => {
+            require(`./routes/${file}`)(api);
+        });
+        logger.info(`API is now running on port ${port}`);
+
+    } catch (error) {
+        logger.error('Error: failed route setup');
+        process.exit(1);
+    }
 });
 
 api.use(expressWinston.errorLogger(loggerOptions));
