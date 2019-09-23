@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rafaelsofizadeh/food-order-scheduling-api#readme",
   "dependencies": {
+    "agenda": "^2.1.0",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-winston": "^3.3.0",
