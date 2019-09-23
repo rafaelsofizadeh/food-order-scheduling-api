@@ -1,37 +1,45 @@
 const mongoose = require('mongoose');
 const Logger = require('../utils/logger/logger.js');
 const logger = new Logger();
-const Week = require('../models/weekModel');
+const Week = require('../database/models/weekModel');
 
 module.exports = {
     weekListController: (request, response) => {
         try {
+
             const weeks = await Week.find({}).lean().populate('days').exec();
 
-            response
+            return response
                 .status(200)
                 .json(weeks);
+
         } catch (error) {
+
             logger.error(error);
-            response
+            return response
                 .status(500)
                 .send('Error: couldn\'t get list of all weeks');
+
         }
     },
     weekGetController: (request, response) => {
         const weekId = request.params.id;
 
         try {
+
             const week = await Week.findById(weekId).lean().populate('days').exec();
 
-            response
+            return response
                 .status(200)
                 .json(week);
+
         } catch (error) {
+
             logger.error(error);
-            response
+            return response
                 .status(500)
                 .send(`Error: couldn\'t get a week with id ${weekId}`);
+
         }
     },
     weekCreateController: async (request, response) => {
