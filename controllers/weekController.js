@@ -7,7 +7,7 @@ module.exports = {
     weekListController: (request, response) => {
         try {
 
-            const weeks = await Week.find({}).lean().populate('days').exec();
+            const weeks = await Week.find({}).lean().exec();
 
             return response
                 .status(200)
@@ -27,7 +27,7 @@ module.exports = {
 
         try {
 
-            const week = await Week.findById(weekId).lean().populate('days').exec();
+            const week = await Week.findById(weekId).lean().exec();
 
             return response
                 .status(200)

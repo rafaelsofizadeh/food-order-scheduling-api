@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const agenda = require('../../agenda');
 
+const daySchema = require('../schemas/daySchema');
+
 const weekSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     //TODO: USER SYSTEM
