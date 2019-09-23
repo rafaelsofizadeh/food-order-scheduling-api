@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const Logger = require('../utils/logger/logger.js');
-const logger = new Logger();
 const Week = require('../database/models/weekModel');
 
 module.exports = {
@@ -15,7 +13,7 @@ module.exports = {
 
         } catch (error) {
 
-            logger.error(error);
+            console.log(error);
             return response
                 .status(500)
                 .send('Error: couldn\'t get list of all weeks');
@@ -35,7 +33,7 @@ module.exports = {
 
         } catch (error) {
 
-            logger.error(error);
+            console.log(error);
             return response
                 .status(500)
                 .send(`Error: couldn\'t get a week with id ${weekId}`);
