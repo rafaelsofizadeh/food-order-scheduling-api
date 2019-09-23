@@ -44,7 +44,7 @@ weekSchema.pre('save', function () {
 });
 
 //Add a 6 day schedule
-weekSchema.methods.initiate = function () {
+weekSchema.methods.initiate = async function () {
     const startDate = this.start;
 
     for (let days = 0; days < 6; days++) {

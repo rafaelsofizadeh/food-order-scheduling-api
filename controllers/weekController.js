@@ -4,7 +4,7 @@ const logger = new Logger();
 const Week = require('../database/models/weekModel');
 
 module.exports = {
-    weekListController: (request, response) => {
+    weekListController: async (request, response) => {
         try {
 
             const weeks = await Week.find({}).lean().exec();
@@ -22,7 +22,7 @@ module.exports = {
 
         }
     },
-    weekGetController: (request, response) => {
+    weekGetController: async (request, response) => {
         const weekId = request.params.id;
 
         try {
@@ -80,7 +80,7 @@ module.exports = {
                 .send('Error: couldn\'t validate the week creation');
         }
     },
-    weekUpdateController: (request, response) => {
+    weekUpdateController: async (request, response) => {
         const weekId = request.params.id;
         const update = request.body.update;
 
