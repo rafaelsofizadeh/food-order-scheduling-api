@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
+
 const Week = require('../database/models/weekModel.js');
+
+const Logger = require('./utils/logger/logger.js');
+const logger = new Logger();
 
 module.exports = (agenda) => {
     agenda.define('set week status', async (job) => {
@@ -9,6 +13,7 @@ module.exports = (agenda) => {
             { $set: { status: data.status } },
             { new: true }
         );
-        //TODO: add success log
+
+        logger.info(`Status of week at ${updatedWeek.start.toDateString()} updated to ${data.status}`);
     });
 };
