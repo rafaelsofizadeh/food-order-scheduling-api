@@ -1,4 +1,4 @@
-const { weekListController, weekGetController, weekCreateController, weekPatchController } = require('../controllers/weekController.js');
+const { weekListController, weekGetController, weekCreateController, weekUpdateController } = require('../controllers/weekController.js');
 
 module.exports = (api) => {
     api.route('/week')
@@ -6,5 +6,5 @@ module.exports = (api) => {
         .post(weekCreateController);
     api.route('/week/:id')
         .get(weekGetController)
-        .patch(weekPatchController);
+        .patch(weekUpdateController);
 };
