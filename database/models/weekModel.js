@@ -60,4 +60,4 @@ weekSchema.methods.scheduleStatusJobs = function () {
     agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'closed' });
 };
 
-module.exports = module.model('Week', weekSchema);
+module.exports = mongoose.model('Week', weekSchema);

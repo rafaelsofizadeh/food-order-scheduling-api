@@ -27,8 +27,6 @@ api.listen(port, (error) => {
         process.exit(1);
     }
 
-    require('./utils/database');
-
     try {
 
         fs.readdirSync(path.join(__dirname, 'routes')).map((file) => {

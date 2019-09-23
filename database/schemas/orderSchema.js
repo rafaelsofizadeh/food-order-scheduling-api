@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 module.exports = mongoose.Schema({
     product: {
-        type: mongoose.Schema.Tyoes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
         required: true
     },
