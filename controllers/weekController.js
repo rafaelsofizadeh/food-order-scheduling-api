@@ -98,6 +98,7 @@ module.exports = {
 
             Object.keys(update).map((day) => {
                 week.days.set(day, update[day]);
+                week.days[day].finalized = true;
             });
             const updatedWeek = await week.save();
 
