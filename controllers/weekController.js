@@ -80,18 +80,32 @@ module.exports = {
                 .send('Error: couldn\'t validate the week creation');
         }
     },
-        } else {
-            //Triggers weekSchema's pre('save') hooks 
-            const weekSaveResult = await week.save();
-            response
-                .status(201)
-                .json({
-                    message: 'Success: week entry successfully created',
-                    week: weekSaveResult
-                });
-        }
-    },
-    weekEditController: (request, response) => {
+    weekUpdateController: (request, response) => {
+        const weekId = request.params.id;
+        const update = request.body.update;
 
+        const week = await Week.findById(weekId).lean().exec();
+
+        if (week.status === 'closed') {
+
+            return response
+                .status(403) //Access forbidden
+                .send('Error: the week is closed for editing');
+
+        } else {
+
+            Object.keys(update).map((day) => {
+                week.days.set(day, update[day]);
+            });
+            const updatedWeek = await week.save();
+
+            return response
+                .status(205) //Reset content
+                .json({
+                    message: 'Success: week has been successfully updated',
+                    updatedWeek
+                });
+
+        }
     }
 };
