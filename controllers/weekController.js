@@ -45,7 +45,11 @@ module.exports = {
 
         const week = new Week({
             _id: mongoose.Types.ObjectId(),
-            ...body
+            start: new Date(body.start),
+            open: new Date(body.open),
+            close: new Date(body.close),
+            status: body.status,
+            days: body.days
         });
 
         try {
