@@ -18,7 +18,9 @@ const weekSchema = mongoose.Schema({
         type: Date,
         required: true,
         validate: {
-            validator: (date) => date < this.close,
+            validator: function (date) {
+                return date < this.close;
+            },
             message: 'open date needs to be earlier than close date'
         }
     },
@@ -45,10 +47,8 @@ weekSchema.pre('save', function () {
 
 //Add a 6 day schedule
 weekSchema.methods.initiate = async function () {
-    const startDate = this.start;
-
     for (let days = 0; days < 6; days++) {
-        this.days.push({ date: Date.addDays(startDate, days) });
+        this.days.push({ date: this.start.addDays(days) });
     }
 
     const weekSaveResult = await this.save();
