@@ -149,9 +149,9 @@ module.exports = {
                 Object.keys(update).map((day) => {
                     //Control that the day's date is corresponding to its place in array
                     //DETERMINE?: return error or continue
-                    update[day].set('date', week.start.addDays(day));
-                    week.days.set(day, update[day], daySchema);
-                    week.days[day].set('finalized', true, Boolean);
+                    update[day].date = week.start.addDays(day);
+                    week.days.set(day, update[day]);
+                    week.days[day].finalized = true;
                 });
                 const updatedWeek = await week.save();
 
@@ -168,6 +168,7 @@ module.exports = {
                     .status(500) //Server error
                     .send(`Error: couldn\'t update schedule of the week with id ${weekId}`);
             }
+
         }
     }
 };
