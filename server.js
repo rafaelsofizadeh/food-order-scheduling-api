@@ -1,3 +1,4 @@
+//TODO: better errors (with original messages)
 require('./utils/misc/extendDatePrototype');
 
 const fs = require('fs');
