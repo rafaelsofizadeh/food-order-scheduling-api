@@ -83,7 +83,7 @@ module.exports = {
                 .send('Error: couldn\'t validate the week creation');
         }
     },
-    weekUpdateController: async (request, response) => {
+    weekScheduleUpdateController: async (request, response) => {
         const weekId = request.params.id;
         const update = request.body.update;
 
