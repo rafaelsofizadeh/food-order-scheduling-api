@@ -149,19 +149,30 @@ module.exports = {
 
         } else {
 
-            Object.keys(update).map((day) => {
-                week.days.set(day, update[day]);
-                week.days[day].finalized = true;
-            });
-            const updatedWeek = await week.save();
+            try {
 
-            return response
-                .status(205) //Reset content
-                .json({
-                    message: 'Success: week has been successfully updated',
-                    updatedWeek
+                Object.keys(update).map((day) => {
+                    //Control that the day's date is corresponding to its place in array
+                    //DETERMINE?: return error or continue
+                    update[day].set('date', week.start.addDays(day));
+                    week.days.set(day, update[day], daySchema);
+                    week.days[day].set('finalized', true, Boolean);
                 });
+                const updatedWeek = await week.save();
 
+                return response
+                    .status(205) //Reset content
+                    .json({
+                        message: 'Success: week has been successfully updated',
+                        updatedWeek
+                    });
+
+            } catch (error) {
+                console.log(error);
+                return response
+                    .status(500) //Server error
+                    .send(`Error: couldn\'t update schedule of the week with id ${weekId}`);
+            }
         }
     }
 };
