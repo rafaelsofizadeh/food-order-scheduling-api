@@ -5,7 +5,7 @@ Date.prototype.getFormatDay = function (date) {
 };
 
 Date.prototype.addDays = function (days) {
-    var date = new Date(this.valueOf());
+    const date = new Date(this.valueOf());
     date.setDate(date.getDate() + days);
     return date;
 };
