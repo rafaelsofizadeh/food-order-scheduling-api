@@ -87,7 +87,7 @@ module.exports = {
         const weekId = request.params.id;
         const update = request.body.update;
 
-        const week = await Week.findById(weekId).lean().exec();
+        const week = await Week.findById(weekId).exec();
 
         if (week.status === 'closed') {
 
