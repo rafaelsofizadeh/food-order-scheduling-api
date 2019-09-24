@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const agenda = require('../agenda');
 const Week = require('../database/models/weekModel');
 
 module.exports = {
@@ -86,11 +87,25 @@ module.exports = {
     weekEditController: async (request, response) => {
         const weekId = request.params.id;
         const body = request.body;
+        //https://stackoverflow.com/a/39333479
+        //Changing 'start' date won't be available
+        const allowedProperties = (({ status, open, close }) =>
+            ({
+                status,
+                open: new Date(open).valueOf(),
+                close: new Date(close).valueOf()
+            })
+        )(body);
+
         try {
 
             const week = await Week.findById(weekId).exec();
 
+            ['open', 'closed'].map((status) => {
+                if (allowedProperties[status]) {
                     week[status] = allowedProperties[status];
+                }
+            });
             week.status = allowedProperties.status || week.status;
             const weekSaveResult = await week.save();
 
