@@ -101,7 +101,7 @@ module.exports = {
 
             const week = await Week.findById(weekId).exec();
 
-            ['open', 'closed'].map((status) => {
+            ['open', 'close'].map((status) => {
                 if (allowedProperties[status]) {
                     week[status] = allowedProperties[status];
                     agenda.cancel(
