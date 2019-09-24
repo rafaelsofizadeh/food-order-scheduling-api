@@ -31,8 +31,8 @@ const weekSchema = mongoose.Schema({
     status: {
         type: String,
         required: true,
-        default: 'closed',
-        enum: ['open', 'urgent', 'closed']
+        default: 'close',
+        enum: ['open', 'close']
     },
     days: [daySchema]
 });
