@@ -89,13 +89,7 @@ module.exports = {
         const body = request.body;
         //https://stackoverflow.com/a/39333479
         //Changing 'start' date won't be available
-        const allowedProperties = (({ status, open, close }) =>
-            ({
-                status,
-                open: new Date(open).valueOf(),
-                close: new Date(close).valueOf()
-            })
-        )(body);
+        const allowedProperties = (({ status, open, close }) => ({ status, open, close }))(body);
 
         try {
 
@@ -103,7 +97,8 @@ module.exports = {
 
             ['open', 'close'].map((status) => {
                 if (allowedProperties[status]) {
-                    week[status] = allowedProperties[status];
+                    week[status] = new Date(allowedProperties[status]);
+
                     agenda.cancel(
                         {
                             name: 'set week status',

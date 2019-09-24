@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const orderSchema = require('./orderSchema');
 
-const daySchema = mongoose.Schema({
+module.exports = mongoose.Schema({
     date: {
         type: Date,
         required: true,
