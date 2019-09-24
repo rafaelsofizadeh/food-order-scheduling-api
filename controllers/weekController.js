@@ -83,6 +83,33 @@ module.exports = {
                 .send('Error: couldn\'t validate the week creation');
         }
     },
+    weekEditController: async (request, response) => {
+        const weekId = request.params.id;
+        const body = request.body;
+        try {
+
+            const week = await Week.findById(weekId).exec();
+
+                    week[status] = allowedProperties[status];
+            week.status = allowedProperties.status || week.status;
+            const weekSaveResult = await week.save();
+
+            console.log(weekSaveResult);
+            return response
+                .status(201) //Created
+                .json({
+                    message: `Success: week entry successfully edited`,
+                    week: weekSaveResult
+                });
+
+        } catch (error) {
+            console.log(error);
+            return response
+                .status(500) //Server error
+                .send(`Error: couldn\'t edit the week with id ${weekId}`);
+        }
+
+    },
     weekScheduleUpdateController: async (request, response) => {
         const weekId = request.params.id;
         const update = request.body.update;
