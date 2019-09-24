@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Week = require('../database/models/weekModel.js');
 
 module.exports = (agenda) => {
