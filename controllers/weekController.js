@@ -104,6 +104,16 @@ module.exports = {
             ['open', 'closed'].map((status) => {
                 if (allowedProperties[status]) {
                     week[status] = allowedProperties[status];
+                    agenda.cancel(
+                        {
+                            name: 'set week status',
+                            'data.weekId': weekId,
+                            'data.status': status
+                        },
+                        (error) => {
+                            console.log(error);
+                        }
+                    );
                 }
             });
             week.status = allowedProperties.status || week.status;
