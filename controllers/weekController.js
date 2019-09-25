@@ -74,13 +74,13 @@ module.exports = {
             } else {
 
                 //Triggers weekSchema's pre('save') hooks 
-                const weekSaveResult = await week.save();
-                console.log(weekSaveResult);
+                const createdWeek = await week.save();
+                console.log(createdWeek);
                 return response
                     .status(201) //Created
                     .json({
-                        message: 'Success: week entry successfully created',
-                        week: weekSaveResult
+                        message: 'Success: week entry created',
+                        week: createdWeek
                     });
 
             }
@@ -119,14 +119,14 @@ module.exports = {
                 }
             });
             week.status = allowedProperties.status || week.status;
-            const weekSaveResult = await week.save();
+            const editedWeek = await week.save();
 
-            console.log(weekSaveResult);
+            console.log(editedWeek);
             return response
                 .status(201) //Created
                 .json({
-                    message: `Success: week entry successfully edited`,
-                    week: weekSaveResult
+                    message: `Success: week entry edited`,
+                    week: editedWeek
                 });
 
         } catch (error) {
