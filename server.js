@@ -1,4 +1,3 @@
-//TODO: better errors (with original messages)
 require('./utils/misc/extendDatePrototype');
 
 const fs = require('fs');
@@ -12,6 +11,9 @@ const config = require('./config.json');
 const port = config['connection']['port'];
 const connectionString = config['connection']['mongodb']['connection_string'];
 const connectionOptions = config['connection']['mongodb']['options'];
+
+require('./database/models/weekModel');
+require('./database/models/productModel');
 
 mongoose.connect(connectionString, connectionOptions);
 
