@@ -52,6 +52,13 @@ module.exports = {
         });
 
         try {
+            const week = new Week({
+                _id: mongoose.Types.ObjectId(),
+                start: new Date(body.start),
+                open: new Date(body.open),
+                close: new Date(body.close)
+            });
+
             const validationError = await week.validate();
 
             if (validationError) {
