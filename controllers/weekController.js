@@ -45,6 +45,7 @@ module.exports = {
         const body = request.body;
 
         try {
+
             const week = new Week({
                 _id: mongoose.Types.ObjectId(),
                 start: new Date(body.start),
@@ -52,29 +53,15 @@ module.exports = {
                 close: new Date(body.close)
             });
 
-            const validationError = await week.validate();
-
-            if (validationError) {
-
-                console.log(validationError);
-                return response
-                    .status(400) //General error
-                    .json({
-                        message: 'Error: couldn\'t create a new week entry due to validation error',
-                        validationError
-                    });
-
-            } else {
-
-                //Triggers weekSchema's pre('save') hooks 
-                const createdWeek = await week.save();
-                console.log(createdWeek);
-                return response
-                    .status(201) //Created
-                    .json({
-                        message: 'Success: week entry created',
-                        week: createdWeek
-                    });
+            //Triggers weekSchema's pre('save') hooks 
+            const createdWeek = await week.save();
+            console.log(createdWeek);
+            return response
+                .status(201) //Created
+                .json({
+                    message: 'Success: week entry created',
+                    week: createdWeek
+                });
 
             }
         } catch (error) {
