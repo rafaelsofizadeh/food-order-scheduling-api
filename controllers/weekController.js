@@ -44,13 +44,6 @@ module.exports = {
     weekCreateController: async (request, response) => {
         const body = request.body;
 
-        const week = new Week({
-            _id: mongoose.Types.ObjectId(),
-            start: new Date(body.start),
-            open: new Date(body.open),
-            close: new Date(body.close)
-        });
-
         try {
             const week = new Week({
                 _id: mongoose.Types.ObjectId(),
