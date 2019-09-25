@@ -1,9 +1,10 @@
-const Week = require('../database/models/weekModel.js');
+const mongoose = require('mongoose');
+const Week = require('../database/models/weekModel');
 
 module.exports = (agenda) => {
     agenda.define('set week status', async (job) => {
-        const data = job.attr.data;
-        const updatedWeek = await Week.findByIdAndUpdate(
+        const data = job.attrs.data;
+        const updatedWeek = await mongoose.model('Week').findByIdAndUpdate(
             data.weekId,
             { $set: { status: data.status } },
             { new: true }
