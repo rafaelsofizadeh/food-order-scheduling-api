@@ -63,12 +63,14 @@ module.exports = {
                     week: createdWeek
                 });
 
-            }
-        } catch (error) {
-            console.log(error);
+        } catch (validationError) {
+            console.log(validationError);
             return response
                 .status(400) //Server error
-                .send('Error: couldn\'t validate the week creation');
+                .json({
+                    message: 'Error: couldn\'t validate the week creation',
+                    error: validationError.message,
+                });
         }
     },
     weekEditController: async (request, response) => {
@@ -130,7 +132,7 @@ module.exports = {
 
         const week = await Week.findById(weekId).exec();
 
-        if (week.status === 'closed') {
+        if (week.status === 'close') {
 
             return response
                 .status(403) //Access forbidden
@@ -152,7 +154,7 @@ module.exports = {
                 return response
                     .status(205) //Reset content
                     .json({
-                        message: 'Success: week has been successfully updated',
+                        message: 'Success: week schedule has been successfully updated',
                         updatedWeek
                     });
 
