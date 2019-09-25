@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 const agenda = require('../../agenda');
 
 const daySchema = require('../schemas/daySchema');
@@ -12,7 +13,8 @@ const weekSchema = mongoose.Schema({
         validate: {
             validator: (date) => date.getFormatDay() === 0,
             message: 'start date must be monday'
-        }
+        },
+        unique: true
     },
     open: {
         type: Date,
@@ -36,6 +38,7 @@ const weekSchema = mongoose.Schema({
     },
     days: [daySchema]
 });
+
 
 //Initiate automatically on week creation
 weekSchema.pre('save', function () {
@@ -62,5 +65,7 @@ weekSchema.methods.scheduleStatusJobs = function () {
     agenda.schedule(openDate, 'set week status', { weekId: this._id, status: 'open' });
     agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'closed' });
 };
+
+mongoose.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Week', weekSchema);
