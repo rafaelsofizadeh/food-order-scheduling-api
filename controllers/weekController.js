@@ -6,7 +6,7 @@ module.exports = {
     weekListController: async (request, response) => {
         try {
 
-            const weeks = await Week.find({}).lean().exec();
+            const weeks = await Week.find({}).lean().populate('days.orders.product').exec();
 
             return response
                 .status(200)
