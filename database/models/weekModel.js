@@ -60,7 +60,7 @@ weekSchema.methods.scheduleStatusJobs = function () {
     const closeDate = this.close;
 
     agenda.schedule(openDate, 'set week status', { weekId: this._id, status: 'open' });
-    agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'closed' });
+    agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'close' });
 };
 
 mongoose.plugin(uniqueValidator);
