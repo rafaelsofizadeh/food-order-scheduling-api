@@ -53,9 +53,6 @@ weekSchema.methods.initiate = async function () {
     for (let days = 0; days < 6; days++) {
         this.days.push({ date: this.start.addDays(days) });
     }
-
-    const weekSaveResult = await this.save();
-    console.log(weekSaveResult);
 };
 
 weekSchema.methods.scheduleStatusJobs = function () {
