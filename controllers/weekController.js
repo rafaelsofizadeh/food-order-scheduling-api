@@ -80,7 +80,7 @@ module.exports = {
         } catch (error) {
             console.log(error);
             return response
-                .status(500) //Server error
+                .status(400) //Server error
                 .send('Error: couldn\'t validate the week creation');
         }
     },
@@ -97,7 +97,8 @@ module.exports = {
 
             ['open', 'close'].map((status) => {
                 if (allowedProperties[status]) {
-                    week[status] = new Date(allowedProperties[status]);
+                    const setDate = new Date(allowedProperties[status]);
+                    week[status] = setDate;
 
                     agenda.cancel(
                         {
@@ -105,8 +106,14 @@ module.exports = {
                             'data.weekId': weekId,
                             'data.status': status
                         },
-                        (error) => {
+                        (error, removed) => {
                             console.log(error);
+
+                            if (!removed) {
+                                console.log(`Agenda: something\'s wrong, agenda jobs for week ${weekId} with status ${status} haven't been deleted`);
+                            }
+
+                            agenda.schedule(setDate, 'set week status', { weekId, status });
                         }
                     );
                 }
