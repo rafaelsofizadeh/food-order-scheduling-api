@@ -3,10 +3,15 @@ const uniqueValidator = require('mongoose-unique-validator');
 const agenda = require('../../agenda');
 
 const daySchema = require('../schemas/daySchema');
+const User = require('./userModel');
 
 const weekSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    //TODO: USER SYSTEM
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     start: {
         type: Date,
         required: true,

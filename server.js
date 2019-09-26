@@ -14,6 +14,7 @@ const connectionOptions = config['connection']['mongodb']['options'];
 
 require('./database/models/weekModel');
 require('./database/models/productModel');
+require('./database/models/userModel');
 
 mongoose.connect(connectionString, connectionOptions);
 

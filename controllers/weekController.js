@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const agenda = require('../agenda');
 const Week = require('../database/models/weekModel');
+const User = require('../database/models/userModel');
 
 module.exports = {
     weekListController: async (request, response) => {
@@ -48,14 +49,35 @@ module.exports = {
 
             const week = new Week({
                 _id: mongoose.Types.ObjectId(),
+                user: body.userId,
                 start: new Date(body.start),
                 open: new Date(body.open),
                 close: new Date(body.close)
             });
 
+            const user = await User.findById(body.userId).exec();
+            if (!user) {
+                return response
+                    .status(400) //Bad request
+                    .send(`Error: incorrect user id ${body.userId} for the week`);
+            }
+
             //Triggers weekSchema's pre('save') hooks 
-            const createdWeek = await week.save();
-            console.log(createdWeek);
+            const weekSaveResult = await week.save();
+
+            if (weekSaveResult && user) {
+                user.weeks.push(week._id);
+                const updatedUser = await user.save();
+            }
+
+            const createdWeek = await weekSaveResult
+                .populate('days.orders.product')
+                .populate({
+                    path: 'user',
+                    select: '-weeks'
+                })
+                .execPopulate();
+
             return response
                 .status(201) //Created
                 .json({
