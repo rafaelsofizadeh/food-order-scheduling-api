@@ -7,7 +7,15 @@ module.exports = {
     weekListController: async (request, response) => {
         try {
 
-            const weeks = await Week.find({}).lean().populate('days.orders.product').exec();
+            const weeks = await Week
+                .find({})
+                .lean()
+                .populate('days.orders.product')
+                .populate({
+                    path: 'user',
+                    select: '-weeks'
+                })
+                .exec();
 
             return response
                 .status(200)
@@ -27,7 +35,15 @@ module.exports = {
 
         try {
 
-            const week = await Week.findById(weekId).lean().exec();
+            const week = await Week
+                .findById(weekId)
+                .lean()
+                .populate('days.orders.product')
+                .populate({
+                    path: 'user',
+                    select: '-weeks'
+                })
+                .exec();
 
             return response
                 .status(200)
@@ -88,7 +104,7 @@ module.exports = {
         } catch (validationError) {
             console.log(validationError);
             return response
-                .status(400) //Server error
+                .status(400) //Bad request
                 .json({
                     message: 'Error: couldn\'t validate the week creation',
                     error: validationError.message,
@@ -99,7 +115,7 @@ module.exports = {
         const weekId = request.params.id;
         const body = request.body;
         //https://stackoverflow.com/a/39333479
-        //Changing 'start' date won't be available
+        //Changing anything except 'status, open, close' won't be available
         const allowedProperties = (({ status, open, close }) => ({ status, open, close }))(body);
 
         try {
@@ -130,7 +146,13 @@ module.exports = {
                 }
             });
             week.status = allowedProperties.status || week.status;
-            const editedWeek = await week.save();
+            const editedWeek = await (await week.save())
+                .populate('days.orders.product')
+                .populate({
+                    path: 'user',
+                    select: '-weeks'
+                })
+                .execPopulate();
 
             console.log(editedWeek);
             return response
@@ -171,7 +193,13 @@ module.exports = {
                     week.days.set(day, update[day]);
                     week.days[day].finalized = true;
                 });
-                const updatedWeek = await week.save();
+                const updatedWeek = await (await week.save())
+                    .populate('days.orders.product')
+                    .populate({
+                        path: 'user',
+                        select: '-weeks'
+                    })
+                    .execPopulate();
 
                 return response
                     .status(205) //Reset content
