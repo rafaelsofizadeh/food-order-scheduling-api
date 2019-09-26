@@ -49,6 +49,7 @@ const weekSchema = mongoose.Schema({
 weekSchema.pre('save', function () {
     if (this.isNew) {
         this.initiate();
+        //this.updateUser();
         this.scheduleStatusJobs();
     }
 });
@@ -67,6 +68,18 @@ weekSchema.methods.scheduleStatusJobs = function () {
     agenda.schedule(openDate, 'set week status', { weekId: this._id, status: 'open' });
     agenda.schedule(closeDate, 'set week status', { weekId: this._id, status: 'close' });
 };
+
+/*weekSchema.methods.updateUser = async function () {
+    const user = await User.findById(this.user).lean().exec();
+    if (user) {
+        user.weeks.push(this._id);
+
+        const updatedUser = await user.save();
+        console.log(updatedUser);
+    } else {
+        throw new Error('Error: couldn\'t validate week creation, incorrect user id');
+    }
+};*/
 
 mongoose.plugin(uniqueValidator);
 
