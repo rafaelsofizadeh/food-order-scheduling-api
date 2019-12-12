@@ -1,0 +1,98 @@
+function MinHeap() {
+    const top = 0;
+    const left = (i) => i * 2 + 1;
+    const right = (i) => i * 2 + 2;
+    const parent = (i) => Math.floor((i - 1) / 2);
+
+    const _heap = [];
+
+    this.heap = () => _heap;
+
+    this.size = () => _heap.length;
+
+    this.peek = () => _heap[top];
+
+    this.push = (...entries) => {
+        [...entries].forEach((entry) => {
+            _heap.push(entry);
+            _siftUp();
+        });
+
+        return this.size();
+    };
+
+    this.pop = () => {
+        const value = this.peek();
+
+        const bottom = this.size() - 1;
+        _swap(bottom, top);
+
+        _heap.pop();
+        _siftDown();
+
+        return value;
+    };
+
+    const _greater = (i, j) => _heap[i] > _heap[j];
+
+    const _swap = (i, j) => [_heap[i], _heap[j]] = [_heap[j], _heap[i]];
+
+    const _siftUp = () => {
+        let node = this.size() - 1;
+
+        while (
+            node > top
+            && _heap[node]
+            && _heap[parent(node)]
+            && _greater(parent(node), node)
+        ) {
+            _swap(node, parent(node));
+            node = parent(node);
+        }
+    };
+
+    const _siftDown = () => {
+        let node = top;
+
+        while (
+            _heap[left(node)]
+            && _greater(node, left(node))
+            ||
+            _heap[right(node)]
+            && _greater(node, right(node))
+        ) {
+            let minChild;
+
+            if (_heap[left(node)] === undefined) {
+                minChild = right(node);
+            } else if (_heap[right(node)] === undefined) {
+                minChild = left(node);
+            } else {
+                minChild = _heap[left(node)] < _heap[right(node)] ? left(node) : right(node);
+            }
+
+            _swap(minChild, node);
+            node = minChild;
+        }
+    };
+};
+
+const minMeetingRooms = function (intervals) {
+    if (intervals.length === 0) return 0;
+
+    intervals.sort((start, end) => start[0] - end[0]);
+
+    const rooms = new MinHeap();
+
+    rooms.push(intervals[0][1]);
+
+    for (let i = 1, length = intervals.length; i < length; i++) {
+        if (intervals[i][0] >= rooms.peek()) {
+            rooms.pop();
+        }
+
+        rooms.push(intervals[i][1]);
+    }
+
+    return rooms.size();
+};

@@ -7,6 +7,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const compression = require('compression');
 
+const sheets = require('./sheets/index');
+
 const config = require('./config.json');
 const port = config['connection']['port'];
 const connectionString = config['connection']['mongodb']['connection_string'];
@@ -25,7 +27,7 @@ api.use(compression());
 api.use(express.urlencoded({ extended: true }));
 api.use(express.json());
 
-api.listen(port, (error) => {
+api.listen(port, async (error) => {
     if (error) {
         console.log(error);
         process.exit(1);
@@ -42,6 +44,8 @@ api.listen(port, (error) => {
         console.log(error);
         process.exit(1);
     }
+
+    await sheets();
 });
 
 module.exports = api;

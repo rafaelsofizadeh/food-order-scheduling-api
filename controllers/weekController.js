@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const agenda = require('../agenda');
+
+const dateUtil = require('../utils/misc/extendDatePrototype');
+
 const Week = require('../database/models/weekModel');
 const User = require('../database/models/userModel');
 
@@ -66,9 +69,9 @@ module.exports = {
             const week = new Week({
                 _id: mongoose.Types.ObjectId(),
                 user: body.userId,
-                start: new Date(body.start),
-                open: new Date(body.open),
-                close: new Date(body.close)
+                start: body.start,
+                open: body.open,
+                close: body.close
             });
 
             const user = await User.findById(body.userId).exec();
@@ -122,25 +125,25 @@ module.exports = {
 
             const week = await Week.findById(weekId).exec();
 
-            ['open', 'close'].map((status) => {
-                if (allowedProperties[status]) {
-                    const setDate = new Date(allowedProperties[status]);
-                    week[status] = setDate;
+            ['open', 'close'].map((action) => {
+                if (allowedProperties[action]) {
+                    const setDate = allowedProperties[action];
+                    week[action] = allowedProperties[action];
 
                     agenda.cancel(
                         {
                             name: 'set week status',
                             'data.weekId': weekId,
-                            'data.status': status
+                            'data.status': action
                         },
                         (error, removed) => {
                             console.log(error);
 
                             if (!removed) {
-                                console.log(`Agenda: something\'s wrong, agenda jobs for week ${weekId} with status ${status} haven't been deleted`);
+                                console.log(`Agenda: something\'s wrong, agenda jobs for week ${weekId} with status ${action} haven't been deleted`);
                             }
 
-                            agenda.schedule(setDate, 'set week status', { weekId, status });
+                            agenda.schedule(setDate, 'set week status', { weekId, action });
                         }
                     );
                 }
@@ -189,7 +192,7 @@ module.exports = {
                 Object.keys(update).map((day) => {
                     //Control that the day's date is corresponding to its place in array
                     //DETERMINE?: return error or continue
-                    update[day].date = week.start.addDays(day);
+                    update[day].date = week.days[day].date;
                     week.days.set(day, update[day]);
                     week.days[day].finalized = true;
                 });

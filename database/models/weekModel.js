@@ -1,25 +1,21 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
 const agenda = require('../../agenda');
+
+const dateUtil = require('../../utils/misc/extendDatePrototype');
 
 const daySchema = require('../schemas/daySchema');
 const User = require('./userModel');
 
 const weekSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     start: {
         type: Date,
         required: true,
         validate: {
-            validator: (date) => date.getFormatDay() === 0,
+            validator: (date) => dateUtil.getFormatDay(date) === 0,
             message: 'start date must be monday'
         },
-        unique: true
+        //unique: true
     },
     open: {
         type: Date,
@@ -41,7 +37,10 @@ const weekSchema = mongoose.Schema({
         default: 'close',
         enum: ['open', 'close']
     },
-    days: [daySchema]
+    userSchedules: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserSchedule'
+    }
 });
 
 
@@ -55,11 +54,11 @@ weekSchema.pre('save', function () {
 });
 
 //Add a 6 day schedule
-weekSchema.methods.initiate = async function () {
+/*weekSchema.methods.initiate = async function () {
     for (let days = 0; days < 6; days++) {
-        this.days.push({ date: this.start.addDays(days) });
+        this.days.push({ date: dateUtil.addDays(this.start, days) });
     }
-};
+};*/
 
 weekSchema.methods.scheduleStatusJobs = function () {
     const openDate = this.open;
@@ -81,6 +80,6 @@ weekSchema.methods.scheduleStatusJobs = function () {
     }
 };*/
 
-mongoose.plugin(uniqueValidator);
+//mongoose.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Week', weekSchema);
